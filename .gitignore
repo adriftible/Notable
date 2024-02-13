@@ -1,3 +1,7 @@
 # Python
 venv
 output
+
+# IDEs
+.vscode
+.idea

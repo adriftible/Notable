@@ -4,7 +4,7 @@ import os
 
 # * Preload runtime information
 
-VERISON = "0.2.0 (CANARY.2122024.020.B1)"
+VERSION = "0.2.0 (CANARY.2122024.020.B1)"
 placeholderText = [
     "Once upon a time...",
     "In my imagination...",
@@ -69,7 +69,7 @@ class Menu(ctk.CTkTabview):
         AppInfo.pack(pady=10)
 
         VersionInformation = ctk.CTkLabel(
-            master=AppInfo, text=f"Noteable verison: {VERISON}"
+            master=AppInfo, text=f"Notable version: {VERSION}"
         )
         VersionInformation.pack()
 
@@ -94,7 +94,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title(f"Notable - {VERISON}")
+        self.title(f"Notable - {VERSION}")
         self.geometry("700x700")
         self.resizable(False, False)
 
