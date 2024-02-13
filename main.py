@@ -2,102 +2,108 @@ import customtkinter as ctk
 import random
 import os
 
-#* Preload runtime information
+# * Preload runtime information
 
-VERISON = '0.1.0'
+VERSION = "0.2.0 (CANARY.2122024.020.B1)"
 placeholderText = [
-    'Once upon a time...', 
-    'In my imagination...',
-    'Just a reminder...',
-    'Wanted to say...',
-    'I would like to know…',
-    'FYI...',
-    'A promise I have...'
-    ]
+    "Once upon a time...",
+    "In my imagination...",
+    "Just a reminder...",
+    "Wanted to say...",
+    "I would like to know…",
+    "FYI...",
+    "A promise I have...",
+]
 
 placeholderTitle = [
-    'Business meeting',
-    'Construction notes',
-    'Biology notes',
-    'Algebra notes',
-    'Reading notes',
-    'Informational notes',
-    'Awesome notepad'
-    ]
+    "Business meeting",
+    "Construction notes",
+    "Biology notes",
+    "Algebra notes",
+    "Reading notes",
+    "Informational notes",
+    "Awesome notepad",
+]
 
 saveDirectory = os.path.expanduser("~/Documents")
 
 
-#* Define application size and information
-app = ctk.CTk()
-app.title('Notable')
-app.geometry("700x700")
-app.resizable(False, False)
+# Tab widget
+class Menu(ctk.CTkTabview):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
 
-tabview = ctk.CTkTabview(master=app, width=700, height=700)
-tabview.pack()
+        # Create `tab` objects
+        self.add("Note")
+        self.add("Settings")
 
-tabview.add("Note")
-tabview.add("Settings")
+        # ? Set default tab for application
+        self.set("Note")
 
-#? Set default tab for application
-tabview.set("Note")
+        # Widgets - Note tab
 
-# Widgets - Note tab
-NoteTitle = ctk.CTkTextbox(
-    master=tabview.tab("Note"),
-    corner_radius=15,
-    width=700,
-    height=50,
-)
-NoteTitle.pack(pady=10)
-NoteTitle.insert("0.0", random.choice(placeholderTitle))
+        NoteTitle = ctk.CTkTextbox(
+            master=self.tab("Note"),
+            corner_radius=15,
+            width=700,
+            height=50,
+        )
+        NoteTitle.pack(pady=10)
+        NoteTitle.insert("0.0", random.choice(placeholderTitle))
 
-NoteEntry = ctk.CTkTextbox(
-    master=tabview.tab("Note"),
-    corner_radius=20,
-    width=700,
-    height=530,
-    activate_scrollbars=True
-)
-NoteEntry.pack()
-NoteEntry.insert("0.0", random.choice(placeholderText))
+        NoteEntry = ctk.CTkTextbox(
+            master=self.tab("Note"),
+            corner_radius=20,
+            width=700,
+            height=530,
+            activate_scrollbars=True,
+        )
+        NoteEntry.pack()
+        NoteEntry.insert("0.0", random.choice(placeholderText))
 
-# Widgets - Settings tab
+        # Widgets - Settings tab
 
-AppInfo = ctk.CTkFrame(
-    master=tabview.tab("Settings"), 
-    width=200, 
-    height=200, 
-    corner_radius=5
-)
-AppInfo.pack(pady=10)
+        AppInfo = ctk.CTkFrame(
+            master=self.tab("Settings"), width=200, height=200, corner_radius=5
+        )
+        AppInfo.pack(pady=10)
 
-VersionInformation = ctk.CTkLabel(
-    master=AppInfo,
-    text=f'Noteable verison: {VERISON}'
-)
-VersionInformation.pack()
+        VersionInformation = ctk.CTkLabel(
+            master=AppInfo, text=f"Notable version: {VERSION}"
+        )
+        VersionInformation.pack()
 
-#* Noteable API and funcutionality
+        def save_file():
+            title = NoteTitle.get("0.0", "end")
+            text = NoteEntry.get("0.0", "end")
 
-def save_file():
-    title = NoteTitle.get("0.0", "end")
-    text = NoteEntry.get("0.0", "end")
+            with open(
+                os.path.join(saveDirectory, f"{title}.txt".replace("\n", "")), "w"
+            ) as f:
+                f.write(text)
 
-    with open(os.path.join(saveDirectory, f'{title}.txt'.replace("\n", "")), 'w') as f:
-        f.write(text)
+        SaveButton = ctk.CTkButton(
+            master=self.tab("Note"), text="Save note to computer", command=save_file
+        )
+
+        SaveButton.pack(pady=10)
 
 
-# Widget - Save function
-SaveButton = ctk.CTkButton(
-    master=tabview.tab("Note"),
-    text="Save note to computer",
-    command=save_file
-)
+# * Define application size and information
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
 
-SaveButton.pack(pady=10)
+        self.title(f"Notable - {VERSION}")
+        self.geometry("700x700")
+        self.resizable(False, False)
 
-#* Run Application
-if '__main__' == __name__:
+        self.tab_view = Menu(master=self, width=700, height=700)
+        self.tab_view.pack()
+
+
+# * Run Application
+if "__main__" == __name__:
+    ctk.set_default_color_theme("app\green.json")
+    app = App()
     app.mainloop()
